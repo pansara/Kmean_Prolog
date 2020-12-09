@@ -1,25 +1,4 @@
-%%%%Kmean can also add max itteration 
-kmean(DataSet, 1, [DataSet]).
-kmean(DataSet, K, DataSet) :- 
-      length(DataSet, L),
-      L == K,
-      !.
-kmean(DataSet, K, Clusters):-
-      length(DataSet, L),
-      L @> K, !,
-      init(DataSet, K, Centroids),
-      begin_clustering(DataSet, [], Centroids, K, Clusters).
-	  
 
-%%%%begin_clustering
-%% Input: DataSet: [[1,2], [3, 4], [2, 3]]
-%% InitialClusters: [] OR [ C1 = [[1, 2], [3, 4]], C2=[[2,3]] ]
-%% Centroids : [cs1, cs2]
-begin_clustering(DataSet, Centroids, K, PreviousClusterMap, ResultantClusterMap) :-
-	get_cluster_map(DataSet, Centroids, UpdatedClusterMap),
-
-	
-	
 %% Remove Everything above this to test it, since things above are not yet fully implemented
 
 %%% get_cluster_map 
@@ -40,9 +19,9 @@ get_label(Vertex, [Centroid|Centroids], CurrentMin, R, Result) :-
 		D @< CurrentMin,
 		!,
 		get_label(Vertex, Centroids, D, Centroid, Result).
-get_label(Vertex, [_|Centroids], CurrentMin, R, Result) :-
+get_label(Vertex, [_ | Centroids], CurrentMin, R, Result) :-
 	!,
-	get_label(Vertex, [Centroids], CurrentMin, R, Result).
+	get_label(Vertex, Centroids, CurrentMin, R, Result).
 get_label(_, [], _, Result, Result).
 
 
