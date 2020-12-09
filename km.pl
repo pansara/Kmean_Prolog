@@ -2,13 +2,14 @@
 kmean(DataSet, 1, [DataSet]).
 kmean(DataSet, K, DataSet) :- 
       length(DataSet, L),
-      L == K,
+      L =:= K,
       !.
 kmean(DataSet, K, Clusters):-
       length(DataSet, L),
       L @> K, !,
       init(DataSet, K, Centroids),
-      begin_clustering(DataSet, Centroids, K, [], ClusterMap).
+      begin_clustering(DataSet, Centroids, K, [], ClusterMap),
+      cluster_mapping(ClusterMap, DataSet, 0, K, Clusters).
 	  
 %%%%begin_clustering
 %% Input: DataSet: [[1,2], [3, 4], [2, 3]]
