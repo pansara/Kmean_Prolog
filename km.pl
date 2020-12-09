@@ -8,18 +8,19 @@ kmean(DataSet, K, Clusters):-
       length(DataSet, L),
       L @> K, !,
       init(DataSet, K, Centroids),
-      begin_clustering(DataSet, [], Centroids, K, Clusters).
+      begin_clustering(DataSet, Centroids, K, [], ClusterMap).
 	  
-
 %%%%begin_clustering
 %% Input: DataSet: [[1,2], [3, 4], [2, 3]]
 %% InitialClusters: [] OR [ C1 = [[1, 2], [3, 4]], C2=[[2,3]] ]
 %% Centroids : [cs1, cs2]
 begin_clustering(DataSet, Centroids, K, PreviousClusterMap, ResultantClusterMap) :-
 	get_cluster_map(DataSet, Centroids, UpdatedClusterMap),
+	PreviousClusterMap \== UpdatedClusterMap, !, 
+	% Re calculation of Centroids  and store it in UpdatedCentroids
+	begin_clustering(DataSet, UpdatedCentroids, K, PreviousClusterMap, ResultantClusterMap)
+	
 
-	
-	
 %% Remove Everything above this to test it, since things above are not yet fully implemented
 
 %%% get_cluster_map 
