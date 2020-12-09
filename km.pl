@@ -19,8 +19,8 @@ begin_clustering(DataSet, Centroids, K, PreviousClusterMap, ResultantClusterMap)
 	get_cluster_map(DataSet, Centroids, UpdatedClusterMap),
 	PreviousClusterMap \== UpdatedClusterMap, !, 
 	centroids_calc(UpdatedClusterMap, DataSet, K, UpdatedCentroids),
-	begin_clustering(DataSet, UpdatedCentroids, K, PreviousClusterMap, ResultantClusterMap).
-	
+	begin_clustering(DataSet, UpdatedCentroids, K, UpdatedClusterMap, ResultantClusterMap).
+begin_clustering(_, _, _, PreviousClusterMap, PreviousClusterMap).
 
 %% Remove Everything above this to test it, since things above are not yet fully implemented
 
@@ -84,7 +84,7 @@ init(DataSet, K, [H|Centroids]) :-
 %% These are the three newly calculated centroids
 centroids_calc(ClusterMap, DataSet, K, Centroids) :-
 	cluster_mapping(ClusterMap, DataSet, 0, K, NewClusters),
-	maplist(ReCentroid, NewClusters, Centroids).
+	maplist(centroid, NewClusters, Centroids).
 
 
 
@@ -111,3 +111,51 @@ cluster_mapping_helper([_ | ClusterMap], DataSet, Counter, Index, Resultant) :-
 	cluster_mapping_helper(ClusterMap, DataSet, Counter, NextIndex, Resultant).
 cluster_mapping_helper([], _, _, _, []).
 	
+
+
+%%%% centroid
+%% takes the datapoints of a cluster and returns the centroid for that particular cluster
+centroid(DataSet, Centroid) :-
+	list_add(DataSet, AddResult),
+	length(DataSet, L),
+	division(AddResult, L, Centroid).
+centroid([], []).
+
+
+
+%%%% list_add()
+%% takes the list of lists and add the elements in it. It retursn the final sum 
+%%
+list_add([X | T], Result) :-
+	identity_func(X, ID),
+	list_add([X | T], ID, Result).
+list_add([X | T], ID, Result) :-
+	addition(X, ID, Answer),
+	list_add(T, Answer, Result).
+list_add([], Result, Result).
+
+
+
+%%%% identity_func()
+%% gives the identity list for addition i.e. the list of zeros
+identity_func([_ | T], [0 | ID]) :-
+	identity_func(T, ID).
+identity_func([], []).
+
+
+
+%%%% addition()
+%% takes the datapoint and its identity function and perform the addition and return the result
+addition([X1 | T1], [X2 | T2], [InitialAdd | Result]) :-
+	InitialAdd is X1 + X2,
+	addition(T1, T2, Result).
+addition([], [], []).
+
+
+
+%%%% division()
+%% takes the list of result of addition of clusters and divide each result by the total length to get the centroid for that cluster 
+division([X | T], L, [Quotient | Result]) :-
+	Quotient is X / L,
+	division(T, L, Result).
+division([], _, []).
