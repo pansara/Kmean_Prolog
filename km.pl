@@ -17,7 +17,7 @@ kmean(DataSet, K, Clusters):-
 begin_clustering(DataSet, Centroids, K, PreviousClusterMap, ResultantClusterMap) :-
 	get_cluster_map(DataSet, Centroids, UpdatedClusterMap),
 	PreviousClusterMap \== UpdatedClusterMap, !, 
-	% Re calculation of Centroids  and store it in UpdatedCentroids
+	centroids_calc(UpdatedClusterMap, DataSet, K, UpdatedCentroids),
 	begin_clustering(DataSet, UpdatedCentroids, K, PreviousClusterMap, ResultantClusterMap)
 	
 
@@ -73,3 +73,40 @@ init(DataSet, K, [H|Centroids]) :-
         I is K-1,
         init(UpdatedDataset, I, Centroids).
 
+
+
+%%%% centroids_calc()
+%% takes in the cluster map, datasets and number of clusters and gives away the new 
+%% calculated centroids
+%% Return value looks something like this if we have 3 clusters:
+%% [[x1, y1], [x2, y2], [x3, y3]]
+%% These are the three newly calculated centroids
+centroids_calc(ClusterMap, DataSet, K, Centroids) :-
+	cluster_mapping(ClusterMap, DataSet, 0, K, NewClusters),
+	maplist(ReCentroid, NewClusters, Centroids).
+
+
+
+%%%% cluster_mapping()
+%% takes the array of clusters and dataset and returs the list clustered into K parts
+cluster_mapping(_, _, K, K, []) :- !.
+cluster_mapping(ClusterMap, DataSet, Counter, K, [InitialCluster | ResultantCluster]) :-
+	cluster_mapping_helper(ClusterMap, DataSet, Counter, 0, InitialCluster),
+	SubCounter is Counter + 1,
+	cluster_mapping(ClusterMap, DataSet, SubCounter, K, ResultantCluster).
+
+
+
+%%%% cluster_mapping_helper()
+%% this is the helper funciton for the above mapping function
+%% it takes in the array of clusters and dataset and assign the datapoint from the dataset 
+%% to a particular cluster depending on the list of clusters
+cluster_mapping_helper([Counter | ClusterMap], DataSet, Counter, Index, [IndexElement | Resultant]) :-
+	nth0(Index, DataSet, IndexElement),
+	NextIndex is Index + 1, !,
+	cluster_mapping_helper(ClusterMap, DataSet, Counter, NextIndex, Resultant).
+cluster_mapping_helper([_ | ClusterMap], DataSet, Counter, Index, Resultant) :-
+	NextIndex is Index + 1, !,
+	cluster_mapping_helper(ClusterMap, DataSet, Counter, NextIndex, Resultant).
+cluster_mapping_helper([], _, _, _, []).
+	
