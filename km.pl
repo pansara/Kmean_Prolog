@@ -18,7 +18,7 @@ begin_clustering(DataSet, Centroids, K, PreviousClusterMap, ResultantClusterMap)
 	get_cluster_map(DataSet, Centroids, UpdatedClusterMap),
 	PreviousClusterMap \== UpdatedClusterMap, !, 
 	centroids_calc(UpdatedClusterMap, DataSet, K, UpdatedCentroids),
-	begin_clustering(DataSet, UpdatedCentroids, K, PreviousClusterMap, ResultantClusterMap)
+	begin_clustering(DataSet, UpdatedCentroids, K, PreviousClusterMap, ResultantClusterMap).
 	
 
 %% Remove Everything above this to test it, since things above are not yet fully implemented
