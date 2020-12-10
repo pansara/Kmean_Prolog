@@ -84,8 +84,17 @@ init(DataSet, K, [H|Centroids]) :-
 %% These are the three newly calculated centroids
 centroids_calc(ClusterMap, DataSet, K, Centroids) :-
 	cluster_mapping(ClusterMap, DataSet, 0, K, NewClusters),
-	maplist(centroid, NewClusters, Centroids).
+	centroidlist(NewClusters, Centroids).
 
+
+
+
+%%%% centroidlist()
+%% takes list of lists containing clusters and give the centroid for each cluster
+centroidlist([X | T], [I | F]) :-
+	centroid(X, I),
+	centroidlist(T, F).
+centroidlist([], []) :- !.
 
 
 %%%% cluster_mapping()
