@@ -87,8 +87,6 @@ centroids_calc(ClusterMap, DataSet, K, Centroids) :-
 	centroidlist(NewClusters, Centroids).
 
 
-
-
 %%%% centroidlist()
 %% takes list of lists containing clusters and give the centroid for each cluster
 centroidlist([X | T], [I | F]) :-
@@ -120,7 +118,6 @@ cluster_mapping_helper([_ | ClusterMap], DataSet, Counter, Index, Resultant) :-
 	cluster_mapping_helper(ClusterMap, DataSet, Counter, NextIndex, Resultant).
 cluster_mapping_helper([], _, _, _, []).
 	
-
 
 %%%% centroid
 %% takes the datapoints of a cluster and returns the centroid for that particular cluster
