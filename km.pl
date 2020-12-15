@@ -1,3 +1,9 @@
+%% Name: Shivani Pansara
+%% StudentID: 104874374
+%% Name: Aman Patel
+%% StudentID: 104956768
+
+
 %%%%Kmean can also add max itteration 
 kmean(DataSet, 1, [DataSet]).
 kmean(DataSet, K, DataSet) :- 
@@ -10,8 +16,6 @@ kmean(DataSet, K, Clusters):-
       init(DataSet, K, Centroids),
       begin_clustering(DataSet, Centroids, K, [], ClusterMap),
       cluster_mapping(ClusterMap, DataSet, 0, K, Clusters).
-
-
 
 
 %%%% init()
@@ -109,10 +113,15 @@ get_label(Vertex, [_ | Centroids], CurrentMin, R, Result) :-
 get_label(_, [], _, Result, Result).
 
 
+%%%% euclidean_distance()
+%% takes two points and find the Euclidean distance i.e. squared distance sqrt((x2-x1)^2 + (y2-y1)^2).
 euclidean_distance([X|T1], [Y|T2], Distance) :- 
 	calculation(T1, T2, (Y-X)^2, S),
 	Distance is sqrt(S). 
 
+
+%%%% calculation()
+%% find the square between two points and adds them i.e. (x2-x1)^2 + (y2-y1)^2
 calculation([], [], I, I).
 calculation([X|T1], [Y|T2], I0, I+I0) :-
 	calculation(T1, T2, (Y-X)^2, I).
@@ -131,14 +140,6 @@ centroids_calc(ClusterMap, DataSet, K, Centroids) :-
 	centroidlist(NewClusters, Centroids).
 
 
-%%%% centroidlist()
-%% takes list of lists containing clusters and give the centroid for each cluster
-centroidlist([X | T], [I | F]) :-
-	centroid(X, I),
-	centroidlist(T, F).
-centroidlist([], []) :- !.
-
-
 %%%% cluster_mapping()
 %% takes the array of clusters and dataset and returs the list clustered into K parts
 cluster_mapping(_, _, K, K, []) :- !.
@@ -150,7 +151,7 @@ cluster_mapping(ClusterMap, DataSet, Counter, K, [InitialCluster | ResultantClus
 
 %%%% cluster_mapping_helper()
 %% this is the helper funciton for the above mapping function
-%% it takes in the array of clusters and dataset and assign the datapoint from the dataset 
+%% it takes in the list of clusters and dataset and assign the datapoint from the dataset 
 %% to a particular cluster depending on the list of clusters
 cluster_mapping_helper([Counter | ClusterMap], DataSet, Counter, Index, [IndexElement | Resultant]) :-
 	nth0(Index, DataSet, IndexElement),
@@ -160,6 +161,14 @@ cluster_mapping_helper([_ | ClusterMap], DataSet, Counter, Index, Resultant) :-
 	NextIndex is Index + 1, !,
 	cluster_mapping_helper(ClusterMap, DataSet, Counter, NextIndex, Resultant).
 cluster_mapping_helper([], _, _, _, []).
+
+%%%% centroidlist()
+%% takes list of lists containing clusters and give the centroid for each cluster
+centroidlist([X | T], [I | F]) :-
+	centroid(X, I),
+	centroidlist(T, F).
+centroidlist([], []) :- !.
+
 
 %%%% centroid
 %% takes the datapoints of a cluster and returns the centroid for that particular cluster
@@ -171,7 +180,6 @@ centroid([], []).
 
 %%%% list_add()
 %% takes the list of lists and add the elements in it. It retursn the final sum 
-%%
 list_add([X | T], Result) :-
 	identity_func(X, ID),
 	list_add([X | T], ID, Result).
@@ -181,7 +189,7 @@ list_add([X | T], ID, Result) :-
 list_add([], Result, Result).
 
 %%%% identity_func()
-%% gives the identity list for addition i.e. the list of zeros
+%% gives the identity list for addition i.e. the list of zeros depending on the dimension of input
 identity_func([_ | T], [0 | ID]) :-
 	identity_func(T, ID).
 identity_func([], []).
